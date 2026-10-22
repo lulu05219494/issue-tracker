@@ -14,6 +14,15 @@ let app = express();
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
+// Chrome blocks requests from public sites (freecodecamp.org) to localhost
+// unless the preflight response allows private network access
+app.use(function (req, res, next) {
+  if (req.headers['access-control-request-private-network']) {
+    res.setHeader('Access-Control-Allow-Private-Network', 'true');
+  }
+  next();
+});
+
 app.use(cors({origin: '*'})); //For FCC testing purposes only
 
 
